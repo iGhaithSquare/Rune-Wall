@@ -32,10 +32,10 @@ void main_layer_rendering_end_callback(layer* self,void *ctx){
 layer* create_main_layer(const char *name){
     layer* main_layer = calloc(1,sizeof(layer));
     main_layer->Name=name;
-    bind_layer_phase(main_layer,layer_phase_polling,main_layer_polling_callback,NULL);
-    bind_layer_phase(main_layer,layer_phase_render_begin,main_layer_rendering_start_callback,NULL);
-    bind_layer_phase(main_layer,layer_phase_render,main_layer_rendering_callback,NULL);
-    bind_layer_phase(main_layer,layer_phase_render_end,main_layer_rendering_end_callback,NULL);
+    bind_layer_phase(main_layer,layer_phase_polling,main_layer_polling_callback);
+    bind_layer_phase(main_layer,layer_phase_render_begin,main_layer_rendering_start_callback);
+    bind_layer_phase(main_layer,layer_phase_render,main_layer_rendering_callback);
+    bind_layer_phase(main_layer,layer_phase_render_end,main_layer_rendering_end_callback);
     main_layer_data* Data = (main_layer_data*)calloc(1,sizeof(main_layer_data));
     Data->RuneWall = create_runewall(80,24);
     main_layer->LayerData=Data;
