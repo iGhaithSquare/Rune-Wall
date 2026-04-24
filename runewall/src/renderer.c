@@ -4,8 +4,10 @@
 #include "framebuffer.h"
 #include "renderer.h"
 #include <stdlib.h>
+#include "drawbuffer.h"
 struct renderer{
-    framebuffer * Frame_Buffer;
+    framebuffer *Frame_Buffer;
+    drawbuffer *Draw_Buffer;
 };
 #ifdef _WIN32
 #include <windows.h>
@@ -43,6 +45,7 @@ renderer *create_runewall(short width,short height){
     set_console_size(width,height);
     renderer* Runewall = (renderer*)calloc(1,sizeof(renderer));
     Runewall->Frame_Buffer = create_framebuffer(width,height);
+    Runewall->Draw_Buffer = create_drawbuffer();
     printf("\x1b[?1049h");
     printf("\x1b[?25l");
     return Runewall;
@@ -50,13 +53,33 @@ renderer *create_runewall(short width,short height){
 void destroy_runewall(renderer* self){
     if(!self) return;
     destroy_framebuffer(self->Frame_Buffer);
+    destroy_drawbuffer(self->Draw_Buffer);
     free(self);
 }
 void runewall_start_render_frame(renderer* self){
     framebuffer_newframe(self->Frame_Buffer);
+    drawbuffer_clear(self->Draw_Buffer);
 }
 void runewall_end_render_frame(renderer* self){
+    drawbuffer_sort(self->Draw_Buffer);
+    for(size_t i=0;i<self->Draw_Buffer->Count;i++){
+        sprite_object Sprite= self->Draw_Buffer->Sprites[i];
+        framebuffer_draw_sprite(self->Frame_Buffer,Sprite.Sprite,Sprite.X,Sprite.Y);
+    }
     printf("\x1b[H");
     framebuffer_output_data(self->Frame_Buffer);
     fflush(stdout);
+}
+
+sprite create_sprite(const char* Sprite, short Width, short Height){
+    sprite S = {
+        .Data = Sprite,
+        .Width = Width,
+        .Height = Height
+    };
+    return S;
+}
+
+void draw_sprite(renderer* self,sprite Sprite, short X, short Y,short Z){
+    drawbuffer_submit_sprite(self->Draw_Buffer,Sprite,X,Y,Z);
 }

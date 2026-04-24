@@ -4,5 +4,7 @@
 #include "../src/renderer.h"
 
 /**/
-create_layer_phase(Render,1);
+create_layer_phase(render_begin,4);
+create_layer_phase(render,5);
+create_layer_phase(render_end,6);
 #endif
