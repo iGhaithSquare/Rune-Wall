@@ -8,6 +8,7 @@
 struct renderer{
     framebuffer *Frame_Buffer;
     drawbuffer *Draw_Buffer;
+    drawbuffer *Draw_Overlay_Buffer;
 };
 #ifdef _WIN32
 #include <windows.h>
@@ -46,6 +47,7 @@ renderer *create_runewall(short width,short height){
     renderer* Runewall = (renderer*)calloc(1,sizeof(renderer));
     Runewall->Frame_Buffer = create_framebuffer(width,height);
     Runewall->Draw_Buffer = create_drawbuffer();
+    Runewall->Draw_Overlay_Buffer = create_drawbuffer();
     printf("\x1b[?1049h");
     printf("\x1b[?25l");
     return Runewall;
@@ -54,16 +56,23 @@ void destroy_runewall(renderer* self){
     if(!self) return;
     destroy_framebuffer(self->Frame_Buffer);
     destroy_drawbuffer(self->Draw_Buffer);
+    destroy_drawbuffer(self->Draw_Overlay_Buffer);
     free(self);
 }
 void runewall_start_render_frame(renderer* self){
     framebuffer_newframe(self->Frame_Buffer);
     drawbuffer_clear(self->Draw_Buffer);
+    drawbuffer_clear(self->Draw_Overlay_Buffer);
 }
 void runewall_end_render_frame(renderer* self){
     drawbuffer_sort(self->Draw_Buffer);
+    drawbuffer_sort(self->Draw_Overlay_Buffer);
     for(size_t i=0;i<self->Draw_Buffer->Count;i++){
         sprite_object Sprite= self->Draw_Buffer->Sprites[i];
+        framebuffer_draw_sprite(self->Frame_Buffer,Sprite.Sprite,Sprite.X,Sprite.Y);
+    }
+    for(size_t i=0;i<self->Draw_Overlay_Buffer->Count;i++){
+        sprite_object Sprite= self->Draw_Overlay_Buffer->Sprites[i];
         framebuffer_draw_sprite(self->Frame_Buffer,Sprite.Sprite,Sprite.X,Sprite.Y);
     }
     printf("\x1b[H");
@@ -90,4 +99,7 @@ void destroy_sprite(sprite *s){
 
 void draw_sprite(renderer* self,sprite Sprite, short X, short Y,short Z){
     drawbuffer_submit_sprite(self->Draw_Buffer,Sprite,X,Y,Z);
+}
+void draw_overlay_sprite(renderer* self,sprite Sprite, short X, short Y,short Z){
+    drawbuffer_submit_sprite(self->Draw_Overlay_Buffer,Sprite,X,Y,Z);
 }

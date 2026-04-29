@@ -3,7 +3,7 @@
 #include "renderer.h"
 #include <stddef.h>
 typedef struct sprite_object{
-    sprite Sprite;
+    sprite *Sprite;
     short X;
     short Y;
     short Z;

@@ -6,5 +6,6 @@
 /**/
 create_layer_phase(render_begin,4);
 create_layer_phase(render,5);
-create_layer_phase(render_end,7);
+create_layer_phase(overlay_render,7);
+create_layer_phase(render_end,8);
 #endif

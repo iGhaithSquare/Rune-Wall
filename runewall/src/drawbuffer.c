@@ -15,8 +15,14 @@ void drawbuffer_submit_sprite(drawbuffer* self,sprite Sprite, short X, short Y, 
         sprite_object* temp = (sprite_object*)realloc(self->Sprites,sizeof(sprite_object)*self->Cap);
         self->Sprites=temp;
     }
+    sprite* Sprite_Cpy = (sprite*)malloc(sizeof(sprite));
+    Sprite_Cpy->Height=Sprite.Height;
+    Sprite_Cpy->Width=Sprite.Width;
+    Sprite_Cpy->Data=malloc(Sprite.Width*Sprite.Height+1);
+    memcpy(Sprite_Cpy->Data,Sprite.Data,Sprite.Height*Sprite.Width);
+    Sprite_Cpy->Data[Sprite.Width*Sprite.Height]='\0';
     sprite_object Obj = {
-        .Sprite=Sprite,
+        .Sprite=Sprite_Cpy,
         .X=X,
         .Y=Y,
         .Z=Z
@@ -34,9 +40,17 @@ void drawbuffer_sort(drawbuffer* self){
 
 void destroy_drawbuffer(drawbuffer* self){
     if(!self) return;
+    for(size_t i=0;i<self->Count;i++){
+        free(self->Sprites[i].Sprite->Data);
+        free(self->Sprites[i].Sprite);
+    }
     free(self->Sprites);
     free(self);
 }
 void drawbuffer_clear(drawbuffer* self){
+    for(size_t i=0;i<self->Count;i++){
+        free(self->Sprites[i].Sprite->Data);
+        free(self->Sprites[i].Sprite);
+    }
     self->Count=0;
 }
