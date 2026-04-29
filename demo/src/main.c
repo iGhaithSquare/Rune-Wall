@@ -21,13 +21,13 @@ void main_layer_rendering_start_callback(layer* self,void *ctx){
 void main_layer_rendering_callback(layer* self,void *ctx){
     main_layer_data* data = (main_layer_data*)self->LayerData;
     sprite example =create_sprite("abcdefghijklmnop",4,4);
-    draw_sprite(data->RuneWall,example,4,4,2);
+    draw_sprite(data->RuneWall,example,4,0,2);
     destroy_sprite(&example);
 }
 void main_layer_overlay_rendering_callback(layer* self,void *ctx){
     main_layer_data* data = (main_layer_data*)self->LayerData;
     sprite text = create_text("||||||||||||||||||||||||",16);
-    draw_overlay_sprite(data->RuneWall,text,0,4,0);
+    draw_overlay_sprite(data->RuneWall,text,0,0,0);
     destroy_sprite(&text);
 }
 /* only do this once in your application*/
@@ -45,6 +45,7 @@ layer* create_main_layer(const char *name){
     bind_layer_phase(main_layer,layer_phase_render_end,main_layer_rendering_end_callback);
     main_layer_data* Data = (main_layer_data*)calloc(1,sizeof(main_layer_data));
     Data->RuneWall = create_runewall(80,24);
+    set_renderer_offset(Data->RuneWall,20,5);
     main_layer->LayerData=Data;
     return main_layer;
 }

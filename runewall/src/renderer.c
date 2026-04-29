@@ -9,6 +9,8 @@ struct renderer{
     framebuffer *Frame_Buffer;
     drawbuffer *Draw_Buffer;
     drawbuffer *Draw_Overlay_Buffer;
+    short offset_X;
+    short offset_Y;
 };
 #ifdef _WIN32
 #include <windows.h>
@@ -96,10 +98,13 @@ void destroy_sprite(sprite *s){
     if(!s->Data) return;
     free(s->Data);
 }
-
+void set_renderer_offset(renderer* self,short X,short Y){
+    self->offset_X=X;
+    self->offset_Y=Y;
+}
 void draw_sprite(renderer* self,sprite Sprite, short X, short Y,short Z){
-    drawbuffer_submit_sprite(self->Draw_Buffer,Sprite,X,Y,Z);
+    drawbuffer_submit_sprite(self->Draw_Buffer,Sprite,self->offset_X+X,self->offset_Y+Y,Z);
 }
 void draw_overlay_sprite(renderer* self,sprite Sprite, short X, short Y,short Z){
-    drawbuffer_submit_sprite(self->Draw_Overlay_Buffer,Sprite,X,Y,Z);
+    drawbuffer_submit_sprite(self->Draw_Overlay_Buffer,Sprite,self->offset_X+X,self->offset_Y+Y,Z);
 }
