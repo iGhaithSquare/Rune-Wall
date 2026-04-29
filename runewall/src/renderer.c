@@ -72,12 +72,20 @@ void runewall_end_render_frame(renderer* self){
 }
 
 sprite create_sprite(const char* Sprite, short Width, short Height){
+    char *buffer = malloc(Width*Height+1);
+    GAVEN_ASSERT(buffer,"Couldnt allocate memory for sprite text");
+    memcpy(buffer,Sprite,Width*Height);
+    buffer[Width*Height]='\0';
     sprite S = {
-        .Data = Sprite,
+        .Data = buffer,
         .Width = Width,
         .Height = Height
     };
     return S;
+}
+void destroy_sprite(sprite *s){
+    if(!s->Data) return;
+    free(s->Data);
 }
 
 void draw_sprite(renderer* self,sprite Sprite, short X, short Y,short Z){

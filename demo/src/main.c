@@ -20,9 +20,12 @@ void main_layer_rendering_start_callback(layer* self,void *ctx){
 }
 void main_layer_rendering_callback(layer* self,void *ctx){
     main_layer_data* data = (main_layer_data*)self->LayerData;
-    draw_sprite(data->RuneWall,create_sprite("ABCDEFGHIJKLMNOP",4,4),3,3,0);
-    draw_sprite(data->RuneWall,create_sprite("ABCDEFGHIJKLMNOP",4,4),4,4,1);
-    draw_sprite(data->RuneWall,create_sprite("ABCDEFGHIJKLMNOP",4,4),1,1,-1);
+    sprite text = create_text("hahahaha",8);
+    sprite example =create_sprite("abcdefghijklmnop",4,4);
+    draw_sprite(data->RuneWall,text,3,3,0);
+    draw_sprite(data->RuneWall,example,4,4,2);
+    destroy_sprite(&example);
+    destroy_sprite(&text);
 }
 /* only do this once in your application*/
 void main_layer_rendering_end_callback(layer* self,void *ctx){
