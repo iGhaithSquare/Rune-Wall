@@ -50,12 +50,16 @@ layer* create_main_layer(const char *name){
     return main_layer;
 }
 /* Using the prebuilt Gaven Main workflow */
-application* gaven_main(int argc, char** argv){
+
+
+int main(){
     /* We create the application*/
     application* app = create_gaven_application();
     /* Create main layer */
     layer* main_layer = create_main_layer("Main Layer");
     add_layer(app->Layer_Registry,main_layer);
-    /* We return the application*/
-    return app;
+    /*Run the application*/
+    run_application();
+    /* We destroy the application*/
+    destroy_application();
 }

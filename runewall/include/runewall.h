@@ -1,7 +1,6 @@
 #ifndef RUINEWALL_H
 #define RUINEWALL_H
 #include <gaven.h>
-#include "../src/renderer.h"
 #include "../src/primitives.h"
 /**/
 create_layer_phase(render_begin,4);
